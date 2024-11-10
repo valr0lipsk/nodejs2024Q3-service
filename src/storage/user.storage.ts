@@ -50,8 +50,6 @@ export class UserStorage extends Storage<
 
   update(id: string, data: UpdatePasswordDto): Promise<Omit<User, 'password'>> {
     const index = this.entities.findIndex((el) => el.id === id);
-    console.log('INDEX', index);
-    console.log('Entities', this.entities);
     if (index === -1) return undefined;
 
     const current = this.entities[index];
