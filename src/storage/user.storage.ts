@@ -43,7 +43,7 @@ export class UserStorage extends Storage<
     };
 
     this.entities.push(user);
-    const { password, ...userResponse } = user;
+    const { password: _, ...userResponse } = user;
 
     return Promise.resolve(userResponse);
   }
@@ -65,7 +65,7 @@ export class UserStorage extends Storage<
     };
 
     this.entities[index] = user;
-    const { password, ...userResponse } = user;
+    const { password: _, ...userResponse } = user;
     return Promise.resolve(userResponse);
   }
 }
