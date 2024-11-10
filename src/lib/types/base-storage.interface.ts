@@ -1,6 +1,11 @@
 import { BaseEntity } from './base-entity.interface';
 
-export interface BaseStorage<T extends BaseEntity, C, U, K extends keyof T> {
+export interface BaseStorage<
+  T extends BaseEntity,
+  C,
+  U,
+  K extends keyof T = never,
+> {
   findAll(): Promise<T[]>;
   findOne(id: string): Promise<T | null>;
   create(data: C): Promise<Omit<T, K> | T>;

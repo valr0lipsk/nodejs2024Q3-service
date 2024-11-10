@@ -2,8 +2,12 @@ import { BaseEntity } from '../types/base-entity.interface';
 import { BaseStorage } from '../types/base-storage.interface';
 import { v4 as uuid } from 'uuid';
 
-export abstract class Storage<T extends BaseEntity, C, U, K extends keyof T>
-  implements BaseStorage<T, C, U, K>
+export abstract class Storage<
+  T extends BaseEntity,
+  C,
+  U,
+  K extends keyof T = never,
+> implements BaseStorage<T, C, U, K>
 {
   protected entities: Array<T> = [];
 

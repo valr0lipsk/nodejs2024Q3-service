@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Res,
@@ -44,11 +43,8 @@ export class UserController {
     @Body() updateUserDto: UpdatePasswordDto,
     @Res() res: Response,
   ) {
-    console.log('ID', id);
     const r = await this.userService.update(id, updateUserDto);
-    console.log('RES', r);
     if (!r) {
-      console.log('NOT found');
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     if (!r.id) {
