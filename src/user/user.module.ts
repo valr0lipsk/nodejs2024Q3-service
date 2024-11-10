@@ -6,5 +6,6 @@ import { UserStorage } from 'src/storage/user.storage';
 @Module({
   controllers: [UserController],
   providers: [UserService, UserStorage],
+  exports: [UserStorage],
 })
 export class UserModule {}

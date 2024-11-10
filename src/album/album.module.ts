@@ -6,5 +6,6 @@ import { AlbumStorage } from 'src/storage/album.storage';
 @Module({
   controllers: [AlbumController],
   providers: [AlbumService, AlbumStorage],
+  exports: [AlbumStorage],
 })
 export class AlbumModule {}

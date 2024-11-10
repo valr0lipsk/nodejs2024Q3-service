@@ -6,5 +6,6 @@ import { ArtistStorage } from 'src/storage/artist.storage';
 @Module({
   controllers: [ArtistController],
   providers: [ArtistService, ArtistStorage],
+  exports: [ArtistStorage],
 })
 export class ArtistModule {}
