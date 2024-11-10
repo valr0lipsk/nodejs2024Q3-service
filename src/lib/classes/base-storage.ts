@@ -39,7 +39,6 @@ export abstract class Storage<
 
   async delete(id: string): Promise<boolean> {
     const index = this.entities.findIndex((el) => el.id === id);
-    console.log('CALLED DELETE WITH INDEX', id);
     if (index === -1) return false;
 
     this.entities.splice(index, 1);
