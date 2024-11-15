@@ -10,4 +10,4 @@ COPY . .
 
 ENV NODE_OPTIONS="--es-module-specifier-resolution=node"
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]
