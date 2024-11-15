@@ -8,9 +8,6 @@ import { ArtistStorage } from 'src/storage/artist.storage';
 import { FavoritesStorage } from 'src/storage/fav.storage';
 import { TrackStorage } from 'src/storage/track.storage';
 import { FavoritesResponse } from './interfaces/entity.interface';
-import { Artist } from 'src/artist/interfaces/entity.interface';
-import { Album } from 'src/album/interfaces/entity.interface';
-import { Track } from 'src/track/interfaces/entity.interface';
 
 @Injectable()
 export class FavoritesService {
@@ -24,20 +21,11 @@ export class FavoritesService {
   async getFavorites(): Promise<FavoritesResponse> {
     const favorites = await this.favoritesStorage.getFavorites();
 
-    const artists = await Promise.all(
-      favorites.artists.map((id) => this.artistStorage.findOne(id)),
-    );
-    const albums = await Promise.all(
-      favorites.albums.map((id) => this.albumStorage.findOne(id)),
-    );
-    const tracks = await Promise.all(
-      favorites.tracks.map((id) => this.trackStorage.findOne(id)),
-    );
-
+    // Теперь favorites уже содержит полные объекты, а не только id
     return {
-      artists: artists.filter((artist): artist is Artist => !!artist),
-      albums: albums.filter((album): album is Album => !!album),
-      tracks: tracks.filter((track): track is Track => !!track),
+      artists: favorites.artists || [],
+      albums: favorites.albums || [],
+      tracks: favorites.tracks || [],
     };
   }
 

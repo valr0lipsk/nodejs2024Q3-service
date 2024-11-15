@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Storage } from 'src/lib/classes/base-storage';
 import { CreateUserDto, UpdatePasswordDto } from 'src/user/interfaces/dto';
 import { User } from 'src/user/interfaces/user.entity';
-import { v4 as uuid } from 'uuid';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserStorage extends Storage<
@@ -11,61 +12,45 @@ export class UserStorage extends Storage<
   UpdatePasswordDto,
   'password'
 > {
-  constructor() {
-    super();
-    this.entities = [
-      {
-        id: '3b935613-581b-4466-9a88-143bc02497b8',
-        login: 'John Doe',
-        password: 'john@example.com',
-        version: 1,
-        createdAt: 1,
-        updatedAt: 1,
-      },
-      {
-        id: '24139432-a1b9-429b-9fda-a97b99fbf26e',
-        login: 'Jane Doe',
-        password: 'jane@example.com',
-        version: 1,
-        createdAt: 1,
-        updatedAt: 1,
-      },
-    ];
+  constructor(
+    @InjectRepository(User)
+    repository: Repository<User>,
+  ) {
+    super(repository);
   }
 
-  create(data: CreateUserDto): Promise<Omit<User, 'password'>> {
-    const user: User = {
-      id: uuid(),
+  async create(data: CreateUserDto): Promise<Omit<User, 'password'>> {
+    const user = this.repository.create({
       ...data,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       version: 1,
-    };
+    });
 
-    this.entities.push(user);
+    await this.repository.save(user);
     const { password: _, ...userResponse } = user;
-
-    return Promise.resolve(userResponse);
+    return userResponse;
   }
 
-  update(id: string, data: UpdatePasswordDto): Promise<Omit<User, 'password'>> {
-    const index = this.entities.findIndex((el) => el.id === id);
-    if (index === -1) return undefined;
-
-    const current = this.entities[index];
+  async update(
+    id: string,
+    data: UpdatePasswordDto,
+  ): Promise<Omit<User, 'password'>> {
+    const current = await this.repository.findOne({ where: { id } });
+    if (!current) return undefined;
 
     if (current.password !== data.oldPassword) {
-      return Promise.resolve({ id: undefined } as unknown as User);
+      return { id: undefined } as unknown as User;
     }
-    const user: User = {
+
+    const updated = await this.repository.save({
       ...current,
       password: data.newPassword,
       updatedAt: Date.now(),
       version: ++current.version,
-    };
+    });
 
-    this.entities[index] = user;
-    const { password: _, ...userResponse } = user;
-    return Promise.resolve(userResponse);
+    const { password: _, ...userResponse } = updated;
+    return userResponse;
   }
 }

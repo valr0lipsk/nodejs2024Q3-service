@@ -1,6 +1,7 @@
 import { BaseEntity } from '../types/base-entity.interface';
 import { BaseStorage } from '../types/base-storage.interface';
 import { v4 as uuid } from 'uuid';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 export abstract class Storage<
   T extends BaseEntity,
@@ -9,39 +10,35 @@ export abstract class Storage<
   K extends keyof T = never,
 > implements BaseStorage<T, C, U, K>
 {
-  protected entities: Array<T> = [];
+  constructor(protected repository: Repository<T>) {}
 
   async findAll(): Promise<T[]> {
-    return [...this.entities];
+    return this.repository.find();
   }
 
   async findOne(id: string): Promise<T | undefined> {
-    return this.entities.find((el) => el.id === id);
+    const where = { id: id } as FindOptionsWhere<T>;
+    return this.repository.findOneBy(where);
   }
-
   async create(data: C): Promise<Omit<T, K> | T | null> {
-    const entity = {
+    const e = {
       ...data,
       id: uuid(),
     } as unknown as T;
+    const entity = this.repository.create(e);
 
-    this.entities.push(entity);
+    this.repository.save(entity);
     return entity;
   }
 
   async update(id: string, data: U): Promise<Omit<T, K> | T | null> {
-    const index = this.entities.findIndex((el) => el.id === id);
-    if (index === -1) return undefined;
-
-    this.entities[index] = { ...this.entities[index], ...data };
-    return this.entities[index];
+    // @ts-ignore
+    await this.repository.update(id, data);
+    return this.findOne(id);
   }
 
   async delete(id: string): Promise<boolean> {
-    const index = this.entities.findIndex((el) => el.id === id);
-    if (index === -1) return false;
-
-    this.entities.splice(index, 1);
-    return true;
+    const result = await this.repository.delete(id);
+    return result.affected > 0;
   }
 }

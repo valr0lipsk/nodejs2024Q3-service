@@ -4,6 +4,8 @@ import { Artist } from 'src/artist/interfaces/artist.entity';
 import { Storage } from 'src/lib/classes/base-storage';
 import { AlbumStorage } from './album.storage';
 import { TrackStorage } from './track.storage';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistStorage extends Storage<
@@ -12,15 +14,17 @@ export class ArtistStorage extends Storage<
   UpdateArtistDto
 > {
   constructor(
+    @InjectRepository(Artist)
+    repository: Repository<Artist>,
     private readonly albumStorage: AlbumStorage,
     private readonly trackStorage: TrackStorage,
   ) {
-    super();
+    super(repository);
   }
 
   async delete(id: string): Promise<boolean> {
-    const index = this.entities.findIndex((entity) => entity.id === id);
-    if (index === -1) return false;
+    const artist = await this.repository.findOne({ where: { id } });
+    if (!artist) return false;
 
     const albums = await this.albumStorage.findAll();
     const tracks = await this.trackStorage.findAll();
@@ -37,7 +41,7 @@ export class ArtistStorage extends Storage<
       }
     }
 
-    this.entities.splice(index, 1);
+    await this.repository.remove(artist);
     return true;
   }
 }
