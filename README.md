@@ -23,6 +23,23 @@ npm install
 npm start
 ```
 
+## DOCKER RUN!!
+
+- ensure that migrations folder is exist
+- ensure that .env file is exist and filled with correct data (see .env.example, copy .env.example to .env)
+- ensure that your node version is 22.x
+- on the first run, run following command in the root folder:
+
+```
+docker-compose up --build
+```
+
+- on the second run, run in the root folder:
+
+```
+docker-compose up
+```
+
 ## Testing
 
 After application running open new terminal and enter:
