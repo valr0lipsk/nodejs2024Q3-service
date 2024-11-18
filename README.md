@@ -31,13 +31,13 @@ npm start
 - on the first run, run following command in the root folder:
 
 ```
-docker-compose up --build
+docker-compose up --build or npm run docker:start
 ```
 
 - on the second run, run in the root folder:
 
 ```
-docker-compose up
+docker-compose up or npm run docker
 ```
 
 ## Testing

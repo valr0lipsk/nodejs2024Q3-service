@@ -3,7 +3,7 @@ services:
     build: .
     expose:
       - ${PORT}
-    image: nodejs-service
+    image: valr0lipsk/nodejs-service
     ports:
       - '${PORT}:${PORT}'
     depends_on:
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.postgres
-    image: nodejs-postgres
+    image: valr0lipsk/nodejs-postgres
     ports:
       - '${DATABASE_PORT}:${DATABASE_PORT}'
     environment:
