@@ -14,9 +14,9 @@ export class User {
   @Column({ default: 1 })
   version: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'bigint' })
   createdAt: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'bigint' })
   updatedAt: number;
 }

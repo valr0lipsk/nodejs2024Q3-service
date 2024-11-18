@@ -47,10 +47,12 @@ export class UserStorage extends Storage<
       ...current,
       password: data.newPassword,
       updatedAt: Date.now(),
+      createdAt: +current.createdAt, // a hack because typeorm bigint always returns as a string
       version: ++current.version,
     });
 
     const { password: _, ...userResponse } = updated;
+
     return userResponse;
   }
 }

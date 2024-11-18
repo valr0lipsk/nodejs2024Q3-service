@@ -1,5 +1,3 @@
-import { Album } from 'src/album/interfaces/album.entity';
-import { Artist } from 'src/artist/interfaces/artist.entity';
 import {
   Column,
   Entity,
@@ -25,11 +23,11 @@ export class Track {
   @Column({ nullable: true })
   albumId: string;
 
-  @ManyToOne(() => Artist, { nullable: true })
+  @ManyToOne('Artist', { nullable: true })
   @JoinColumn({ name: 'artistId' })
-  artist: Artist;
+  artist: any;
 
-  @ManyToOne(() => Album, { nullable: true })
+  @ManyToOne('Album', { nullable: true })
   @JoinColumn({ name: 'albumId' })
-  album: Album;
+  album: any;
 }

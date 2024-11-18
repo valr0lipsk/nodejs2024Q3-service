@@ -23,11 +23,10 @@ export abstract class Storage<
   async create(data: C): Promise<Omit<T, K> | T | null> {
     const e = {
       ...data,
-      id: uuid(),
     } as unknown as T;
     const entity = this.repository.create(e);
 
-    this.repository.save(entity);
+    await this.repository.save(entity);
     return entity;
   }
 

@@ -19,7 +19,7 @@ services:
       - ./src:/app/src
     networks:
       - app-network
-    restart: on-failure
+    restart: always
 
   postgres:
     expose:

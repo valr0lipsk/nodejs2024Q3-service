@@ -10,4 +10,4 @@ COPY . .
 
 ENV NODE_OPTIONS="--es-module-specifier-resolution=node"
 
-CMD ["npm", "run", "start:dev"]
+CMD sh -c "npm run migration:run && npm run start:dev"
