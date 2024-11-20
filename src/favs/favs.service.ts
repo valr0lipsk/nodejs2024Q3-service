@@ -21,7 +21,6 @@ export class FavoritesService {
   async getFavorites(): Promise<FavoritesResponse> {
     const favorites = await this.favoritesStorage.getFavorites();
 
-    // Теперь favorites уже содержит полные объекты, а не только id
     return {
       artists: favorites.artists || [],
       albums: favorites.albums || [],
