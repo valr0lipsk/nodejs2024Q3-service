@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/valr0lipsk/nodejs2024Q3-service.git
 ```
 
 ## Installing NPM modules
@@ -23,9 +23,22 @@ npm install
 npm start
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## DOCKER RUN!!
+
+- ensure that migrations folder is exist
+- ensure that .env file is exist and filled with correct data (see .env.example, copy .env.example to .env)
+- ensure that your node version is 22.x
+- on the first run, run following command in the root folder:
+
+```
+docker-compose up --build or npm run docker:start
+```
+
+- on the second run, run in the root folder:
+
+```
+docker-compose up or npm run docker
+```
 
 ## Testing
 
