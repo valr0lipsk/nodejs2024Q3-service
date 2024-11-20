@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdatePasswordDto } from './interfaces/dto';
 import { UserStorage } from 'src/storage/user.storage';
+import { User } from './interfaces/user.entity';
 
 @Injectable()
 export class UserService {
@@ -24,5 +25,9 @@ export class UserService {
 
   remove(id: string) {
     return this.storage.delete(id);
+  }
+
+  async findByLogin(login: string): Promise<User | null> {
+    return this.storage.findByLogin(login);
   }
 }

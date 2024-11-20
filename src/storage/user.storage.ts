@@ -55,4 +55,8 @@ export class UserStorage extends Storage<
 
     return userResponse;
   }
+
+  async findByLogin(login: string): Promise<User | null> {
+    return this.repository.findOne({ where: { login } });
+  }
 }
