@@ -3,7 +3,6 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { join } from 'path';
 
-console.log('path to log file', join(process.cwd(), 'logs', 'app-%DATE%.log'));
 @Injectable()
 export class LoggerService {
   private logger: winston.Logger;

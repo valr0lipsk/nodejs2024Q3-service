@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import {
   Controller,
   Post,
@@ -9,6 +8,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto, SignupDto, RefreshTokenDto } from './interfaces/dto';
 import { UserService } from '../user/user.service';
+import { Public } from './jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,11 +17,13 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
+  @Public()
   @Post('signup')
   async signup(@Body() signupDto: SignupDto) {
     return this.userService.create(signupDto);
   }
 
+  @Public()
   @Post('login')
   @HttpCode(200)
   async login(@Body() loginDto: LoginDto) {
@@ -35,6 +37,7 @@ export class AuthController {
     return this.authService.login(user);
   }
 
+  @Public()
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Body() refreshTokenDto: RefreshTokenDto) {

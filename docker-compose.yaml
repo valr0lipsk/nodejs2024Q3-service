@@ -15,6 +15,11 @@ services:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_NAME=${DATABASE_NAME}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - TOKEN_EXPIRE_TIME=${TOKEN_EXPIRE_TIME}
+      - REFRESH_TOKEN_EXPIRE_TIME=${REFRESH_TOKEN_EXPIRE_TIME}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_MAX_SIZE=${LOG_MAX_SIZE}
     volumes:
       - ./src:/app/src
       - ./logs:/app/logs

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
@@ -11,12 +11,15 @@ import { TrackModule } from './track/track.module';
 import { FavsModule } from './favs/favs.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { JwtMiddleware } from './auth/jwt.middleware';
 
 @Module({
   imports: [
     UserModule,
     ArtistModule,
     AlbumModule,
+    AuthModule,
     TrackModule,
     FavsModule,
     LoggerModule,
@@ -39,5 +42,15 @@ import { LoggerMiddleware } from './logger/logger.middleware';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer
+      .apply(JwtMiddleware)
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/signup', method: RequestMethod.POST },
+        { path: 'auth/refresh', method: RequestMethod.POST },
+        { path: 'doc', method: RequestMethod.ALL },
+        { path: '/', method: RequestMethod.ALL },
+      )
+      .forRoutes('*');
   }
 }
