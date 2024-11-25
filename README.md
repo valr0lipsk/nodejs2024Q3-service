@@ -40,6 +40,15 @@ docker-compose up --build or npm run docker:start
 docker-compose up or npm run docker
 ```
 
+## TEST AUTH
+
+- start docker container (follow rules above)
+- run
+
+```
+npm run test:auth
+```
+
 ## Testing
 
 After application running open new terminal and enter:
