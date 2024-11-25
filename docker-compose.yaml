@@ -1,0 +1,55 @@
+services:
+  api:
+    build: .
+    expose:
+      - ${PORT}
+    image: valr0lipsk/nodejs-service
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - postgres
+    environment:
+      - PORT=${PORT}
+      - DATABASE_HOST={DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - TOKEN_EXPIRE_TIME=${TOKEN_EXPIRE_TIME}
+      - REFRESH_TOKEN_EXPIRE_TIME=${REFRESH_TOKEN_EXPIRE_TIME}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_MAX_SIZE=${LOG_MAX_SIZE}
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+    networks:
+      - app-network
+    restart: always
+
+  postgres:
+    expose:
+      - ${DATABASE_PORT}
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    image: valr0lipsk/nodejs-postgres
+    ports:
+      - '${DATABASE_PORT}:${DATABASE_PORT}'
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  postgres_logs:
+
+networks:
+  app-network:
+    driver: bridge

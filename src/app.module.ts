@@ -1,10 +1,56 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+import { ArtistModule } from './artist/artist.module';
+import { AlbumModule } from './album/album.module';
+import { TrackModule } from './track/track.module';
+import { FavsModule } from './favs/favs.module';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerMiddleware } from './logger/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { JwtMiddleware } from './auth/jwt.middleware';
 
 @Module({
-  imports: [],
+  imports: [
+    UserModule,
+    ArtistModule,
+    AlbumModule,
+    AuthModule,
+    TrackModule,
+    FavsModule,
+    LoggerModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'postgres',
+      port: +process.env.DATABASE_PORT || 5432,
+      username: process.env.DATABASE_USER || 'postgres',
+      password: process.env.DATABASE_PASSWORD || 'postgres',
+      database: process.env.DATABASE_NAME,
+      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+      synchronize: false,
+      retryAttempts: 10,
+      retryDelay: 3000,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer
+      .apply(JwtMiddleware)
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/signup', method: RequestMethod.POST },
+        { path: 'auth/refresh', method: RequestMethod.POST },
+        { path: 'doc', method: RequestMethod.ALL },
+        { path: '/', method: RequestMethod.ALL },
+      )
+      .forRoutes('*');
+  }
+}
